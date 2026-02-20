@@ -1,0 +1,86 @@
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js')
+const qrcode = require('qrcode-terminal')
+const moment = require('moment-timezone')
+const cron = require('node-cron')
+
+const bot = new Client({
+  authStrategy: new LocalAuth({
+    dataPath: 'session'
+  })
+})
+
+const dataimsak = require('./jadwal.json')
+const awalramadan = moment.tz("2026-02-19", "Asia/Makassar").startOf('day')
+
+bot.on('qr', qr => {
+  qrcode.generate(qr, { small: true })
+})
+
+bot.on('ready', async () => {
+  console.log('Bot Ready')
+
+  const chatid = '120363195455821490@g.us'
+
+  cron.schedule('* * * * *', () => {
+
+    const timenow = moment().tz("Asia/Makassar")
+    const time = timenow.format("HH:mm")
+
+    const hariini = timenow.clone().startOf('day')
+    const selisih = hariini.diff(awalramadan, 'days')
+    const puasa = selisih + 1
+
+    try {
+      const data = dataimsak.data.imsakiyah[puasa - 1]
+      if (!data) {
+        console.log('Ramadan Kelar Bang')
+        return
+      }
+      switch (time) {
+        case data.imsak:
+          console.log('[UPDATE] Waktunya Imsak')
+          const media1 = MessageMedia.fromFilePath('./memes/waktunya/imsak.jpg')
+          bot.sendMessage(chatid, media1)
+          break;
+        case "03:00":
+          console.log('[UPDATE] Waktu Sahur')
+          const media2 = MessageMedia.fromFilePath('./memes/waktunya/sahur.jpg')
+          bot.sendMessage(chatid, media2)
+          break;
+        case data.subuh:
+          console.log('[UPDATE] Waktu Sholat Subuh + Puasa')
+          const media7 = MessageMedia.fromFilePath(`./memes/puasa/${puasa}.jpg`)
+          bot.sendMessage(chatid, media7)
+          break;
+        case "17:00":
+          console.log('[UPDATE] Waktu Ngabuburit')
+          const media3 = MessageMedia.fromFilePath('./memes/waktunya/ngabuburit.jpg')
+          bot.sendMessage(chatid, media3)
+          break;
+        case "18:00":
+          console.log('[UPDATE] Waktu Tunggu Magrib')
+          const media4 = MessageMedia.fromFilePath('./memes/waktunya/sedangmenunggu.jpg')
+          bot.sendMessage(chatid, media4)
+          break;
+        case "19:15":
+          console.log('[UPDATE] Waktu Tarawih')
+          const media5 = MessageMedia.fromFilePath('./memes/waktunya/tarawih.jpg')
+          bot.sendMessage(chatid, media5)
+          break;
+        case data.maghrib:
+          console.log('[UPDATE] Waktunya Magrib/Buka Puasa')
+          const media6 = MessageMedia.fromFilePath('./memes/waktunya/bukapuasa.jpg')
+          bot.sendMessage(chatid, media6)
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  })
+
+})
+
+bot.initialize()
+
