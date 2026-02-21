@@ -42,6 +42,33 @@ bot.on('ready', async () => {
           const media1 = MessageMedia.fromFilePath('./memes/waktunya/imsak.jpg')
           bot.sendMessage(chatid, media1)
           break;
+        case data.dzuhur:
+          console.log('[UPDATE] Waktu Sholat Duhur')
+          const msg = `> Sekedar Mengingatkan
+
+• Sudah Masuk Waktu Sholat Duhur
+
+> Pesan Otomatis`
+          bot.sendMessage(chatid, msg)
+          break;
+        case data.ashar:
+          console.log('[UPDATE] Waktu Sholat Ashar')
+          const msg1 = `> Sekedar Mengingatkan
+
+• Sudah Masuk Waktu Sholat Ashar
+
+> Pesan Otomatis`
+          bot.sendMessage(chatid, msg1)
+          break;
+        case data.terbit:
+          console.log('[UPDATE] Waktu Terbit')
+          const msg2 = `> Sekedar Mengingatkan
+
+• Sudah Masuk Waktu Matahari Terbit (Sunrise)
+
+> Pesan Otomatis`
+          bot.sendMessage(chatid, msg2)
+          break;
         case "03:00":
           console.log('[UPDATE] Waktu Sahur')
           const media2 = MessageMedia.fromFilePath('./memes/waktunya/sahur.jpg')
@@ -62,7 +89,7 @@ bot.on('ready', async () => {
           const media4 = MessageMedia.fromFilePath('./memes/waktunya/sedangmenunggu.jpg')
           bot.sendMessage(chatid, media4)
           break;
-        case "19:15":
+        case "19:30":
           console.log('[UPDATE] Waktu Tarawih')
           const media5 = MessageMedia.fromFilePath('./memes/waktunya/tarawih.jpg')
           bot.sendMessage(chatid, media5)
