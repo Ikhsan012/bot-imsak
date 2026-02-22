@@ -47,6 +47,7 @@ bot.on('ready', async () => {
           const msg = `> Sekedar Mengingatkan
 
 • Sudah Masuk Waktu Sholat Duhur
+• Jam : ${data.dzuhur}
 
 > Pesan Otomatis`
           bot.sendMessage(chatid, msg)
@@ -56,6 +57,7 @@ bot.on('ready', async () => {
           const msg1 = `> Sekedar Mengingatkan
 
 • Sudah Masuk Waktu Sholat Ashar
+• Jam : ${data.ashar}
 
 > Pesan Otomatis`
           bot.sendMessage(chatid, msg1)
@@ -64,7 +66,8 @@ bot.on('ready', async () => {
           console.log('[UPDATE] Waktu Terbit')
           const msg2 = `> Sekedar Mengingatkan
 
-• Sudah Masuk Waktu Matahari Terbit (Sunrise)
+• Sudah Masuk Waktu Terbit (Sunrise)
+• Jam ${data.terbit}
 
 > Pesan Otomatis`
           bot.sendMessage(chatid, msg2)
