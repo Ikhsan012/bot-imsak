@@ -2,6 +2,7 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js')
 const qrcode = require('qrcode-terminal')
 const moment = require('moment-timezone')
 const cron = require('node-cron')
+const fs = require('fs')
 
 const bot = new Client({
   authStrategy: new LocalAuth({
@@ -10,6 +11,7 @@ const bot = new Client({
 })
 
 const dataimsak = require('./jadwal.json')
+const quiz = require('./quiz.json')
 const awalramadan = moment.tz("2026-02-19", "Asia/Makassar").startOf('day')
 
 bot.on('qr', qr => {
@@ -69,7 +71,18 @@ bot.on('ready', async () => {
 • Sudah Masuk Waktu Terbit (Sunrise)
 • Jam ${data.terbit}
 
-> Pesan Otomatis`
+> Jadwal Imsakiyah Ramadan Ke ${puasa}
+
+• Imsak : ${data.imsak}
+• Subuh : ${data.subuh}
+• Terbit : ${data.terbit}
+• Dhuha : ${data.dhuha}
+• Duhur : ${data.dzuhur}
+• Ashar : ${data.ashar}
+• Magrib : ${data.maghrib}
+• Isya : ${data.isya}
+
+> Pesan Otomatis `
           bot.sendMessage(chatid, msg2)
           break;
         case "03:00":
