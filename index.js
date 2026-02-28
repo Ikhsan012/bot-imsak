@@ -3,6 +3,35 @@ const qrcode = require('qrcode-terminal')
 const moment = require('moment-timezone')
 const cron = require('node-cron')
 const fs = require('fs')
+const axios = require('axios')
+
+//func
+async function getBerita() {
+  try {
+    let url_berita = 'https://berita-indo-api-next.vercel.app/api/cnn-news/'
+    const respon = await axios.get(url_berita)
+    const res = respon.data.data[0]
+    const { title, link } = res
+    return { title, link }
+  } catch (error) {
+    console.error(error.message)
+    return { title: 'Tidak Ada Berita Terbaru', link: '-' }
+  }
+}
+
+async function getCuaca() {
+  try {
+    let url_cuaca = 'https://api.open-meteo.com/v1/forecast?latitude=-5.1476&longitude=119.4327&current_weather=true'
+    const respon = await axios.get(url_cuaca)
+    return respon.data.current_weather
+  } catch (error) {
+    console.error(error.message);
+    return { temperature: 'Tidak Diketahui' }
+  }
+}
+
+//end
+
 
 const bot = new Client({
   authStrategy: new LocalAuth({
@@ -11,7 +40,6 @@ const bot = new Client({
 })
 
 const dataimsak = require('./jadwal.json')
-const quiz = require('./quiz.json')
 const awalramadan = moment.tz("2026-02-19", "Asia/Makassar").startOf('day')
 
 bot.on('qr', qr => {
@@ -23,7 +51,7 @@ bot.on('ready', async () => {
 
   const chatid = '120363195455821490@g.us'
 
-  cron.schedule('* * * * *', () => {
+  cron.schedule('* * * * *', async () => {
 
     const timenow = moment().tz("Asia/Makassar")
     const time = timenow.format("HH:mm")
@@ -65,6 +93,10 @@ bot.on('ready', async () => {
           bot.sendMessage(chatid, msg1)
           break;
         case data.terbit:
+          //panggil func
+          const berita = await getBerita()
+          const cuaca = await getCuaca()
+          //end
           console.log('[UPDATE] Waktu Terbit')
           const msg2 = `> Sekedar Mengingatkan
 
@@ -82,8 +114,18 @@ bot.on('ready', async () => {
 • Magrib : ${data.maghrib}
 • Isya : ${data.isya}
 
+> Berita Hari Ini
+
+• Suhu Sekitar : ${cuaca.temperature} Derajat
+• Judul : ${berita.title}
+• Sumber : CNN
+• Link : ${berita.link}
+
+"Selamat Menikmati Hari Anda"
+
 > Pesan Otomatis `
           bot.sendMessage(chatid, msg2)
+          console.log(msg2)
           break;
         case "03:00":
           console.log('[UPDATE] Waktu Sahur')
@@ -93,7 +135,7 @@ bot.on('ready', async () => {
         case data.subuh:
           console.log('[UPDATE] Waktu Sholat Subuh + Puasa')
           const media7 = MessageMedia.fromFilePath(`./memes/puasa/${puasa}.jpg`)
-          bot.sendMessage(chatid, media7)
+          bot.sendMessage(chatid, media7, { caption: "Waktunya Sholat Subuh" })
           break;
         case "17:00":
           console.log('[UPDATE] Waktu Ngabuburit')

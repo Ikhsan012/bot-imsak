@@ -1,0 +1,6 @@
+2026/02/28-23:47:14.069 5 Reusing MANIFEST /home/ikhsannull/Documents/nodejs/bot-wa/session/session/Default/Local Storage/leveldb/MANIFEST-000001
+2026/02/28-23:47:14.095 5 Recovering log #4
+2026/02/28-23:47:14.101 5 Reusing old log /home/ikhsannull/Documents/nodejs/bot-wa/session/session/Default/Local Storage/leveldb/000004.log 
+2026/02/28-23:48:14.109 7 Level-0 table #8: started
+2026/02/28-23:48:14.321 7 Level-0 table #8: 16858 bytes OK
+2026/02/28-23:48:14.333 7 Delete type=0 #4
